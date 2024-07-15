@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">Map</string>
+    <string name="search_input_hint">검색어를 입력해 주세요.</string>
+    <string name="no_searched_data">검색 결과가 없습니다.</string>
 </resources>
