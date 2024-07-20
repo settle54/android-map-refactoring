@@ -1,5 +1,6 @@
 package campus.tech.kakao.map
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.View
@@ -8,19 +9,19 @@ import androidx.core.view.isVisible
 import androidx.core.widget.addTextChangedListener
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
-import campus.tech.kakao.map.model.RecentSearchWord
 import campus.tech.kakao.map.databinding.ActivitySearchBinding
+import campus.tech.kakao.map.model.Place
 import campus.tech.kakao.map.viewModel.MapRepository
 import campus.tech.kakao.map.viewModel.PlacesViewModel
 import campus.tech.kakao.map.viewModel.PlacesViewModelFactory
+import kotlinx.coroutines.launch
 
 class SearchActivity : AppCompatActivity() {
     private lateinit var binding: ActivitySearchBinding
     private lateinit var viewModel: PlacesViewModel
     private lateinit var placesAdapter: PlacesAdapter
-
-    private lateinit var searchHistoryList: List<RecentSearchWord>
     private lateinit var searchHistoryAdapter: SearchHistoryAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -32,7 +33,6 @@ class SearchActivity : AppCompatActivity() {
         val viewModelFactory = PlacesViewModelFactory(repository)
         viewModel = ViewModelProvider(this, viewModelFactory).get(PlacesViewModel::class.java)
 
-        searchHistoryList = viewModel.getSearchHistory()
         setUpSearchHistoryAdapter()
         setUpPlacesAdapter()
         setUpViewModelObservers()
@@ -44,16 +44,12 @@ class SearchActivity : AppCompatActivity() {
         binding.deleteInput.setOnClickListener {
             binding.searchInput.text.clear()
         }
-
-        updateSearchHistoryVisibility()
     }
 
     private fun setUpSearchHistoryAdapter() {
         searchHistoryAdapter = SearchHistoryAdapter(
-            searchHistoryList,
             onDeleteClick = { position: Int ->
-                delSearch(position)
-                updateSearchHistoryVisibility()
+                viewModel.delSearch(position)
             },
             onTextClick = { position: Int ->
                 val itemName = searchHistoryAdapter.getItemName(position)
@@ -63,10 +59,15 @@ class SearchActivity : AppCompatActivity() {
     }
 
     private fun setUpPlacesAdapter() {
-        placesAdapter = PlacesAdapter { position: Int ->
-            val itemName = placesAdapter.getItemName(position)
-            insertSearch(itemName)
-            binding.searchHistory.visibility = View.VISIBLE
+        placesAdapter = PlacesAdapter { item: Place ->
+            val itemName = item.name
+            lifecycleScope.launch {
+                viewModel.insertSearch(itemName)
+                viewModel.savePos(item.longitude, item.latitude)
+                Log.d("prefs", "lifecycle")
+            }
+            Log.d("prefs", "lifecycle2")
+            goToSearch(item)
         }
         binding.placesRView.adapter = placesAdapter
         binding.placesRView.layoutManager = LinearLayoutManager(this)
@@ -79,37 +80,20 @@ class SearchActivity : AppCompatActivity() {
             binding.textView.visibility =
                 if (placesAdapter.itemCount <= 0) View.VISIBLE else View.GONE
         })
-
-        viewModel.searchHistoryData.observe(this, Observer {  searchHistoryData ->
-            searchHistoryList = searchHistoryData
+        
+        viewModel.searchHistoryData.observe(this, Observer { searchHistoryData ->
+            searchHistoryAdapter.submitList(searchHistoryData.toList())
+            binding.searchHistory.isVisible = searchHistoryData.isNotEmpty()
         })
     }
 
-    private fun updateSearchHistoryVisibility() {
-        binding.searchHistory.isVisible = searchHistoryList.isNotEmpty()
-    }
-
-    private fun searchHistoryContains(itemName: String): Int {
-        return searchHistoryList.indexOfFirst { it.word == itemName }
-    }
-
-    private fun moveSearchToLast(foundIdx: Int, itemName: String) {
-        viewModel.moveSearchToLast(foundIdx, itemName)
-        searchHistoryAdapter.notifyItemMoved(foundIdx, searchHistoryList.size - 1)
-    }
-
-    private fun insertSearch(search: String) {
-        val foundIdx = searchHistoryContains(search)
-        if (foundIdx != -1) {
-            moveSearchToLast(foundIdx, search)
-        } else {
-            viewModel.addSearch(search)
-            searchHistoryAdapter.notifyItemInserted(searchHistoryList.size)
+    private fun goToSearch(place: Place) {
+        val intent = Intent(this, MainActivity::class.java).apply {
+            putExtra("place", place)
         }
-    }
-
-    private fun delSearch(position: Int) {
-        viewModel.delSearch(position)
-        searchHistoryAdapter.notifyItemRemoved(position)
+        Log.d("searchAct State", "Intent is: $intent")
+        intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP
+        startActivity(intent)
+        finish()
     }
 }

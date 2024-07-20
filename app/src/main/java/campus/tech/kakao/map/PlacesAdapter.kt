@@ -7,10 +7,10 @@ import campus.tech.kakao.map.model.Place
 import campus.tech.kakao.map.databinding.PlaceModuleBinding
 
 class PlacesAdapter(
-    private val onClick: (Int) -> Unit
+    private val onClick: (Place) -> Unit
 ) : RecyclerView.Adapter<PlacesAdapter.ViewHolder>() {
 
-    private var localList: List<Place> = emptyList()
+    private var placesList: List<Place> = emptyList()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val binding = PlaceModuleBinding.inflate(LayoutInflater.from(parent.context), parent, false)
@@ -18,26 +18,31 @@ class PlacesAdapter(
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.bind(localList[position])
+        holder.bind(placesList[position])
     }
 
     override fun getItemCount(): Int {
-        return localList.size
+        return placesList.size
     }
 
     fun updateList(newList: List<Place>) {
-        localList = newList
+        placesList = newList
+    }
+
+    fun getItem(position: Int): Place {
+        return placesList[position]
     }
 
     fun getItemName(position: Int): String {
-        return localList[position].name
+        return placesList[position].name
     }
 
     inner class ViewHolder(private val binding: PlaceModuleBinding): RecyclerView.ViewHolder(binding.root) {
 
         init {
             binding.root.setOnClickListener {
-                onClick(bindingAdapterPosition)
+                onClick(placesList[bindingAdapterPosition])
+
             }
         }
 
