@@ -56,6 +56,8 @@ android {
 fun getApiKey(key: String): String = gradleLocalProperties(rootDir, providers).getProperty(key)
 
 dependencies {
+    implementation("androidx.test.uiautomator:uiautomator:2.3.0")
+    implementation("androidx.test.espresso:espresso-intents:3.6.1")
     val lifecycle_version = "2.8.3"
     val activity_version = "1.9.0"
 
@@ -76,9 +78,8 @@ dependencies {
     testImplementation("androidx.arch.core:core-testing:2.2.0")
     testImplementation("org.robolectric:robolectric:4.11.1")
     androidTestImplementation("androidx.test.ext:junit:1.1.5")
-    androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
-    androidTestImplementation("androidx.test:rules:1.5.0")
-    androidTestImplementation("androidx.test.espresso:espresso-intents:3.5.1")
+    androidTestImplementation("androidx.test.espresso:espresso-core:3.6.1")
+    androidTestImplementation("androidx.test:rules:1.6.1")
 
     
     // https://developer.android.com/codelabs/android-preferences-datastore?hl=ko#4
@@ -87,4 +88,6 @@ dependencies {
     implementation ("androidx.activity:activity-ktx:$activity_version")
     implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycle_version")
     implementation("androidx.lifecycle:lifecycle-livedata-ktx:$lifecycle_version")
+    implementation("androidx.test.espresso:espresso-contrib:3.6.1")
+    androidTestImplementation("androidx.test:runner:1.6.1")
 }
