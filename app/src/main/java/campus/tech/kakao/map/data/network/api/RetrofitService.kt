@@ -1,7 +1,7 @@
-package campus.tech.kakao.map.data
+package campus.tech.kakao.map.data.network.api
 
 import campus.tech.kakao.map.BuildConfig
-import campus.tech.kakao.map.data.dto.SearchResponse
+import campus.tech.kakao.map.data.network.dto.SearchResponse
 import retrofit2.Call
 import retrofit2.http.GET
 import retrofit2.http.Header

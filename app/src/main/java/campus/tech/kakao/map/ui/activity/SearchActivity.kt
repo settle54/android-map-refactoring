@@ -1,4 +1,4 @@
-package campus.tech.kakao.map.ui
+package campus.tech.kakao.map.ui.activity
 
 import android.app.Activity
 import android.content.Intent
@@ -14,8 +14,10 @@ import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import campus.tech.kakao.map.application.MyApplication
 import campus.tech.kakao.map.databinding.ActivitySearchBinding
-import campus.tech.kakao.map.model.Place
-import campus.tech.kakao.map.viewModel.MapViewModel
+import campus.tech.kakao.map.data.model.Place
+import campus.tech.kakao.map.ui.adapter.PlacesAdapter
+import campus.tech.kakao.map.ui.adapter.SearchHistoryAdapter
+import campus.tech.kakao.map.ui.viewModel.MapViewModel
 import kotlinx.coroutines.launch
 
 class SearchActivity : AppCompatActivity() {
@@ -38,6 +40,8 @@ class SearchActivity : AppCompatActivity() {
 
         binding.searchInput.addTextChangedListener { text ->
             viewModel.searchPlaces(text.toString())
+//            viewModel.searchDBPlaces(text.toString())
+//            viewModel.searchRoomPlaces(text.toString())
         }
 
         binding.deleteInput.setOnClickListener {

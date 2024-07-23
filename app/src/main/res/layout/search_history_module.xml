@@ -4,7 +4,7 @@
     <data>
         <variable
             name="data"
-            type="campus.tech.kakao.map.model.RecentSearchWord" />
+            type="campus.tech.kakao.map.data.model.RecentSearchWord" />
     </data>
 
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"

@@ -1,11 +1,11 @@
-package campus.tech.kakao.map.data
+package campus.tech.kakao.map.data.database
 
 import android.annotation.SuppressLint
 import android.content.ContentValues
 import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
-import campus.tech.kakao.map.model.Place
+import campus.tech.kakao.map.data.model.Place
 import java.sql.SQLException
 
 class PlacesDBHelper(context: Context) :

@@ -1,4 +1,4 @@
-package campus.tech.kakao.map.data
+package campus.tech.kakao.map.data.network.api
 
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory

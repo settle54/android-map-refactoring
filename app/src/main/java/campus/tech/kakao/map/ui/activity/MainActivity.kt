@@ -1,4 +1,4 @@
-package campus.tech.kakao.map.ui
+package campus.tech.kakao.map.ui.activity
 
 import android.app.Activity
 import android.content.Intent
@@ -20,8 +20,8 @@ import androidx.core.view.isInvisible
 import campus.tech.kakao.map.application.MyApplication
 import campus.tech.kakao.map.R
 import campus.tech.kakao.map.databinding.ActivityMainBinding
-import campus.tech.kakao.map.model.Place
-import campus.tech.kakao.map.viewModel.MapViewModel
+import campus.tech.kakao.map.data.model.Place
+import campus.tech.kakao.map.ui.viewModel.MapViewModel
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.kakao.vectormap.KakaoMap
 import com.kakao.vectormap.KakaoMapReadyCallback

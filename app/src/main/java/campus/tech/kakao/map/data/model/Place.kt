@@ -1,4 +1,4 @@
-package campus.tech.kakao.map.model
+package campus.tech.kakao.map.data.model
 
 import android.os.Parcelable
 import kotlinx.android.parcel.Parcelize

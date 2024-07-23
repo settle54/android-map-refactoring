@@ -7,8 +7,8 @@ import androidx.test.espresso.action.ViewActions.*
 import androidx.test.espresso.contrib.RecyclerViewActions
 import androidx.test.espresso.matcher.ViewMatchers.*
 import androidx.test.ext.junit.rules.ActivityScenarioRule
-import campus.tech.kakao.map.ui.PlacesAdapter
-import campus.tech.kakao.map.ui.SearchActivity
+import campus.tech.kakao.map.ui.adapter.PlacesAdapter
+import campus.tech.kakao.map.ui.activity.SearchActivity
 import org.junit.Assert.*
 import org.junit.*
 

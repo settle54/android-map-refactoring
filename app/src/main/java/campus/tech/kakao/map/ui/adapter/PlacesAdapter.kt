@@ -1,9 +1,9 @@
-package campus.tech.kakao.map.ui
+package campus.tech.kakao.map.ui.adapter
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import campus.tech.kakao.map.model.Place
+import campus.tech.kakao.map.data.model.Place
 import campus.tech.kakao.map.databinding.PlaceModuleBinding
 
 class PlacesAdapter(

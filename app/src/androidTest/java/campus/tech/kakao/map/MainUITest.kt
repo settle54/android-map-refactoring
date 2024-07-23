@@ -8,8 +8,8 @@ import androidx.test.espresso.matcher.ViewMatchers.*
 import androidx.test.ext.junit.rules.ActivityScenarioRule
 import org.junit.Rule
 import org.junit.Test
-import campus.tech.kakao.map.ui.MainActivity
-import campus.tech.kakao.map.ui.PlacesAdapter
+import campus.tech.kakao.map.ui.activity.MainActivity
+import campus.tech.kakao.map.ui.adapter.PlacesAdapter
 
 
 class MainUITest {

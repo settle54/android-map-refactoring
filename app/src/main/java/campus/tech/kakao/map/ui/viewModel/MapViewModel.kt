@@ -1,4 +1,4 @@
-package campus.tech.kakao.map.viewModel
+package campus.tech.kakao.map.ui.viewModel
 
 import android.app.Application
 import android.util.Log
@@ -6,9 +6,9 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import campus.tech.kakao.map.data.MapRepository
-import campus.tech.kakao.map.model.Place
-import campus.tech.kakao.map.model.RecentSearchWord
+import campus.tech.kakao.map.data.repository.MapRepository
+import campus.tech.kakao.map.data.model.Place
+import campus.tech.kakao.map.data.model.RecentSearchWord
 import com.kakao.vectormap.LatLng
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -24,28 +24,58 @@ class MapViewModel(application: Application, private val repository: MapReposito
 
     init {
         _searchHistoryData.value = repository.searchHistoryList
+        setLocalDB()
     }
 
     fun searchPlaces(search: String) {
-        if (search.isEmpty()) {
-            _places.value = mutableListOf()
-            return
-        }
-        repository.searchPlaces(search) { placeList ->
-            _places.value = placeList
+        viewModelScope.launch {
+            if (search.isEmpty()) {
+                _places.value = mutableListOf()
+                return@launch
+            }
+            repository.searchPlaces(search) { placeList ->
+                _places.value = placeList
+            }
         }
     }
 
     fun searchDBPlaces(search: String) {
-        if (search.isEmpty()) {
-            _places.value = mutableListOf()
-            return
-        }
-        repository.searchDBPlaces(search) { placeList ->
-            _places.value = placeList
+        viewModelScope.launch(Dispatchers.IO) {
+            if (search.isEmpty()) {
+                _places.postValue(mutableListOf())
+                return@launch
+            }
+            repository.searchDBPlaces(search) { placeList ->
+                _places.postValue(placeList)
+                Log.d("search", "insetSearch: ${Thread.currentThread().name}")
+            }
         }
     }
 
+    fun searchRoomPlaces(search: String) {
+        viewModelScope.launch(Dispatchers.IO) {
+            if (search.isEmpty()) {
+                _places.postValue(mutableListOf())
+                return@launch
+            }
+            repository.searchRoomPlaces(search) { placeList ->
+                _places.postValue(placeList)
+                Log.d("search", "insetSearch: ${Thread.currentThread().name}")
+            }
+        }
+    }
+
+    private fun setLocalDB() {
+        viewModelScope.launch(Dispatchers.IO) {
+            repository.insertRoomInitialData()
+            repository.insertLocalInitialData()
+        }
+    }
+
+
+    /**
+     * Pref 관련
+     */
     fun getLastPos(): LatLng? {
         return repository.getLastPos()
     }

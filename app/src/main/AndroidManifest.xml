@@ -20,10 +20,10 @@
         <meta-data android:name="com.kakao.sdk.AppKey" android:value="@string/kakao_api_key"/>
 
         <activity
-            android:name=".ui.SearchActivity"
+            android:name=".ui.activity.SearchActivity"
             android:exported="false" />
         <activity
-            android:name=".ui.MainActivity"
+            android:name=".ui.activity.MainActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
