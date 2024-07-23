@@ -1,9 +1,11 @@
 package campus.tech.kakao.map
 
+import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
 import androidx.core.widget.addTextChangedListener
@@ -14,24 +16,23 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import campus.tech.kakao.map.databinding.ActivitySearchBinding
 import campus.tech.kakao.map.model.Place
 import campus.tech.kakao.map.viewModel.MapRepository
-import campus.tech.kakao.map.viewModel.PlacesViewModel
-import campus.tech.kakao.map.viewModel.PlacesViewModelFactory
+import campus.tech.kakao.map.viewModel.MapViewModel
+import campus.tech.kakao.map.viewModel.MapViewModelFactory
 import kotlinx.coroutines.launch
 
 class SearchActivity : AppCompatActivity() {
     private lateinit var binding: ActivitySearchBinding
-    private lateinit var viewModel: PlacesViewModel
     private lateinit var placesAdapter: PlacesAdapter
     private lateinit var searchHistoryAdapter: SearchHistoryAdapter
+
+    private val viewModel: MapViewModel by viewModels {
+        (application as MyApplication).viewModelFactory
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivitySearchBinding.inflate(layoutInflater)
         setContentView(binding.root)
-
-        val repository = MapRepository(this)
-        val viewModelFactory = PlacesViewModelFactory(repository)
-        viewModel = ViewModelProvider(this, viewModelFactory).get(PlacesViewModel::class.java)
 
         setUpSearchHistoryAdapter()
         setUpPlacesAdapter()
@@ -64,9 +65,9 @@ class SearchActivity : AppCompatActivity() {
             lifecycleScope.launch {
                 viewModel.insertSearch(itemName)
                 viewModel.savePos(item.longitude, item.latitude)
-                Log.d("prefs", "lifecycle")
+                Log.d("prefs", "lifecycle: ${Thread.currentThread().name}")
             }
-            Log.d("prefs", "lifecycle2")
+            Log.d("prefs", "lifecycle2: ${Thread.currentThread().name}")
             goToSearch(item)
         }
         binding.placesRView.adapter = placesAdapter
@@ -92,8 +93,7 @@ class SearchActivity : AppCompatActivity() {
             putExtra("place", place)
         }
         Log.d("searchAct State", "Intent is: $intent")
-        intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP
-        startActivity(intent)
+        setResult(Activity.RESULT_OK, intent)
         finish()
     }
 }

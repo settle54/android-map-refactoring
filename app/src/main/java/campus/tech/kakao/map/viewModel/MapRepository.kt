@@ -131,7 +131,6 @@ class MapRepository(private val context: Context) {
     private fun saveSearchHistory() {
         Log.d("prefs", "saveHistory: ${Thread.currentThread().name}")
         val stringPrefs = GsonBuilder().create().toJson(
-
             searchHistoryList, object : TypeToken<ArrayList<RecentSearchWord>>() {}.type
         )
         prefEditor.putString(SEARCH_HISTORY, stringPrefs)
