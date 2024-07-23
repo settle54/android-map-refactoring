@@ -1,10 +1,8 @@
-package campus.tech.kakao.map
+package campus.tech.kakao.map.application
 
 import android.app.Application
-import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelStore
-import campus.tech.kakao.map.viewModel.MapRepository
-import campus.tech.kakao.map.viewModel.MapViewModel
+import campus.tech.kakao.map.R
+import campus.tech.kakao.map.data.MapRepository
 import campus.tech.kakao.map.viewModel.MapViewModelFactory
 import com.kakao.vectormap.KakaoMapSdk
 

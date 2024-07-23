@@ -1,27 +1,15 @@
 package campus.tech.kakao.map
 
-import android.content.Context
-import android.util.Log
-import android.widget.TextView
-import androidx.recyclerview.widget.RecyclerView
-import androidx.test.core.app.ActivityScenario
-import androidx.test.core.app.ActivityScenario.launch
-import androidx.test.core.app.ApplicationProvider
 import androidx.test.espresso.Espresso.onView
-import androidx.test.espresso.action.ViewActions
 import androidx.test.espresso.action.ViewActions.*
-import androidx.test.espresso.assertion.ViewAssertions
 import androidx.test.espresso.assertion.ViewAssertions.*
 import androidx.test.espresso.contrib.RecyclerViewActions
 import androidx.test.espresso.matcher.ViewMatchers.*
 import androidx.test.ext.junit.rules.ActivityScenarioRule
-import org.hamcrest.Matchers
-import org.junit.Assert
 import org.junit.Rule
 import org.junit.Test
-import androidx.test.espresso.intent.Intents
-import com.kakao.vectormap.KakaoMapSdk
-import org.junit.Before
+import campus.tech.kakao.map.ui.MainActivity
+import campus.tech.kakao.map.ui.PlacesAdapter
 
 
 class MainUITest {

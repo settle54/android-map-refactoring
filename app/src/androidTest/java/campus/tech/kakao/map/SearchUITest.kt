@@ -1,24 +1,16 @@
 package campus.tech.kakao.map
 
-import android.content.Context
-import android.util.Log
-import android.view.View
 import androidx.recyclerview.widget.RecyclerView
 import androidx.test.espresso.assertion.ViewAssertions.matches
-import androidx.test.core.app.ActivityScenario.*
-import androidx.test.core.app.ApplicationProvider
 import androidx.test.espresso.Espresso.*
 import androidx.test.espresso.action.ViewActions.*
-import androidx.test.espresso.assertion.ViewAssertions.*
 import androidx.test.espresso.contrib.RecyclerViewActions
-import androidx.test.espresso.matcher.BoundedMatcher
 import androidx.test.espresso.matcher.ViewMatchers.*
 import androidx.test.ext.junit.rules.ActivityScenarioRule
-import org.hamcrest.Matcher
-import org.hamcrest.TypeSafeMatcher
+import campus.tech.kakao.map.ui.PlacesAdapter
+import campus.tech.kakao.map.ui.SearchActivity
 import org.junit.Assert.*
 import org.junit.*
-import org.hamcrest.Description
 
 class SearchUITest {
 

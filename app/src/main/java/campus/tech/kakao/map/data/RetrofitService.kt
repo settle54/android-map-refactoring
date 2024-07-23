@@ -1,7 +1,7 @@
-package campus.tech.kakao.map.viewModel
+package campus.tech.kakao.map.data
 
 import campus.tech.kakao.map.BuildConfig
-import campus.tech.kakao.map.dto.SearchResponse
+import campus.tech.kakao.map.data.dto.SearchResponse
 import retrofit2.Call
 import retrofit2.http.GET
 import retrofit2.http.Header

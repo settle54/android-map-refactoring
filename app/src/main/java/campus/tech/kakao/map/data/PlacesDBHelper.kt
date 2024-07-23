@@ -1,4 +1,4 @@
-package campus.tech.kakao.map.viewModel
+package campus.tech.kakao.map.data
 
 import android.annotation.SuppressLint
 import android.content.ContentValues

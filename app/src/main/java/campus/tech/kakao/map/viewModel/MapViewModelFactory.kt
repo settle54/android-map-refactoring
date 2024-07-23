@@ -3,6 +3,7 @@ package campus.tech.kakao.map.viewModel
 import android.app.Application
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import campus.tech.kakao.map.data.MapRepository
 
 class MapViewModelFactory(private val application: Application, private val repository: MapRepository) :
     ViewModelProvider.Factory {

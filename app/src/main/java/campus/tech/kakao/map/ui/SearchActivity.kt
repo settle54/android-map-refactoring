@@ -1,4 +1,4 @@
-package campus.tech.kakao.map
+package campus.tech.kakao.map.ui
 
 import android.app.Activity
 import android.content.Intent
@@ -10,14 +10,12 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
 import androidx.core.widget.addTextChangedListener
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
+import campus.tech.kakao.map.application.MyApplication
 import campus.tech.kakao.map.databinding.ActivitySearchBinding
 import campus.tech.kakao.map.model.Place
-import campus.tech.kakao.map.viewModel.MapRepository
 import campus.tech.kakao.map.viewModel.MapViewModel
-import campus.tech.kakao.map.viewModel.MapViewModelFactory
 import kotlinx.coroutines.launch
 
 class SearchActivity : AppCompatActivity() {

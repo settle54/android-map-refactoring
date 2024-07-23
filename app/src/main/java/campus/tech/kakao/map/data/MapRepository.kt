@@ -1,10 +1,10 @@
-package campus.tech.kakao.map.viewModel
+package campus.tech.kakao.map.data
 
 import android.content.Context
 import android.content.SharedPreferences
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
-import campus.tech.kakao.map.dto.SearchResponse
+import campus.tech.kakao.map.data.dto.SearchResponse
 import campus.tech.kakao.map.model.Place
 import campus.tech.kakao.map.model.RecentSearchWord
 import com.google.gson.GsonBuilder

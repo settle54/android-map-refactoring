@@ -1,6 +1,5 @@
-package campus.tech.kakao.map
+package campus.tech.kakao.map.ui
 
-import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
