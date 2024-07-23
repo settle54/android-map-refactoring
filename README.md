@@ -1,1 +1,15 @@
-# android-map-refactoring
+# 카테캠 5주차 과제
+
+## 1단계 - 의존성 주입
+
+### 기능 요구 사항
+
+- 데이터베이스를 Room으로 변경한다.
+- 가능한 모든 부분에 대해서 의존성 주입을 적용한다.
+
+### 프로그래밍 요구 사항
+
+- 의존성 주입을 위해서 Hilt를 사용한다.
+- [코드 컨벤션](https://developer.android.com/kotlin/style-guide?hl=ko)을 준수하며 프로그래밍한다.
+
+
