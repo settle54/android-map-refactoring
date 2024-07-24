@@ -1,6 +1,6 @@
 package campus.tech.kakao.map.ui.viewModel
 
-import android.app.Application
+import android.content.Context
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -10,10 +10,14 @@ import campus.tech.kakao.map.data.repository.MapRepository
 import campus.tech.kakao.map.data.model.Place
 import campus.tech.kakao.map.data.model.RecentSearchWord
 import com.kakao.vectormap.LatLng
+import dagger.hilt.android.lifecycle.HiltViewModel
+import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class MapViewModel(application: Application, private val repository: MapRepository) : ViewModel() {
+@HiltViewModel
+class MapViewModel @Inject constructor(@ApplicationContext context: Context, private val repository: MapRepository) : ViewModel() {
 
     private val _places: MutableLiveData<List<Place>> = MutableLiveData<List<Place>>()
     val places: LiveData<List<Place>> = _places

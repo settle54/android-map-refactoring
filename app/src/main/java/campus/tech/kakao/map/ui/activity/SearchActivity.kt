@@ -18,16 +18,18 @@ import campus.tech.kakao.map.data.model.Place
 import campus.tech.kakao.map.ui.adapter.PlacesAdapter
 import campus.tech.kakao.map.ui.adapter.SearchHistoryAdapter
 import campus.tech.kakao.map.ui.viewModel.MapViewModel
+import campus.tech.kakao.map.ui.viewModel.MapViewModelFactory
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
+@AndroidEntryPoint
 class SearchActivity : AppCompatActivity() {
     private lateinit var binding: ActivitySearchBinding
     private lateinit var placesAdapter: PlacesAdapter
     private lateinit var searchHistoryAdapter: SearchHistoryAdapter
 
-    private val viewModel: MapViewModel by viewModels {
-        (application as MyApplication).viewModelFactory
-    }
+    private val viewModel: MapViewModel by viewModels ()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -40,8 +42,8 @@ class SearchActivity : AppCompatActivity() {
 
         binding.searchInput.addTextChangedListener { text ->
             viewModel.searchPlaces(text.toString())
-//            viewModel.searchDBPlaces(text.toString())
-//            viewModel.searchRoomPlaces(text.toString())
+//            viewModel.searchDBPlaces(text.toString())     //테스트용(검색)
+//            viewModel.searchRoomPlaces(text.toString())   //테스트용(검색)
         }
 
         binding.deleteInput.setOnClickListener {

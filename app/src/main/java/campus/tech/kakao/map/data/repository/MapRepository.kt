@@ -22,8 +22,9 @@ import kotlinx.coroutines.withContext
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import javax.inject.Inject
 
-class MapRepository(private val context: Context, private val placeDao: PlaceDao) :
+class MapRepository @Inject constructor(private val context: Context, private val placeDao: PlaceDao) :
     LocalDBRepoImpl {
     private val localDB: PlacesDBHelper = PlacesDBHelper(context)
     private val localRoom: PlacesDatabase = PlacesDatabase.getDatabase(context)

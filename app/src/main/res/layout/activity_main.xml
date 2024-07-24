@@ -52,6 +52,7 @@
     </com.kakao.vectormap.MapView>
 
     <include
+        android:id="@+id/included_bottom_sheet"
         layout="@layout/bottom_sheet" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

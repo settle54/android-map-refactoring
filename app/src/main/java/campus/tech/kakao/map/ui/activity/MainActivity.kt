@@ -21,10 +21,13 @@ import campus.tech.kakao.map.application.MyApplication
 import campus.tech.kakao.map.R
 import campus.tech.kakao.map.databinding.ActivityMainBinding
 import campus.tech.kakao.map.data.model.Place
+import campus.tech.kakao.map.databinding.BottomSheetBinding
+import campus.tech.kakao.map.databinding.MapErrorBinding
 import campus.tech.kakao.map.ui.viewModel.MapViewModel
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.kakao.vectormap.KakaoMap
 import com.kakao.vectormap.KakaoMapReadyCallback
+import com.kakao.vectormap.KakaoMapSdk
 import com.kakao.vectormap.LatLng
 import com.kakao.vectormap.MapLifeCycleCallback
 import com.kakao.vectormap.camera.CameraAnimation
@@ -33,10 +36,12 @@ import com.kakao.vectormap.label.Label
 import com.kakao.vectormap.label.LabelOptions
 import com.kakao.vectormap.label.LabelStyle
 import com.kakao.vectormap.label.LabelStyles
+import dagger.hilt.android.AndroidEntryPoint
 import java.lang.Exception
 import java.lang.IllegalArgumentException
 
 
+@AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
     private lateinit var kakaoMap: KakaoMap
@@ -50,16 +55,14 @@ class MainActivity : AppCompatActivity() {
     private lateinit var bottomSheetAddress: TextView
     private lateinit var bottomSheetCategory: TextView
 
-    private val viewModel: MapViewModel by viewModels {
-        (application as MyApplication).viewModelFactory
-    }
+    private val viewModel: MapViewModel by viewModels ()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        //KakaoMapSdk.init(this, "I'm nativeKey")     // 오류확인
+//        KakaoMapSdk.init(this, "I'm nativeKey")     // 오류확인
 
         Log.d("onCreate", "")
         val lastPos = viewModel.getLastPos()
@@ -85,8 +88,9 @@ class MainActivity : AppCompatActivity() {
 
             override fun onMapError(e: Exception?) {
                 Log.e("KakaoMap", "카카오맵 인증실패", e)
-                setContentView(R.layout.map_error)
-                val errorMessage = findViewById<TextView>(R.id.errorMessage)
+                val errorBinding: MapErrorBinding = MapErrorBinding.inflate(layoutInflater)
+                setContentView(errorBinding.root)
+                val errorMessage = errorBinding.errorMessage
                 errorMessage.text = e?.message
             }
         }, object : KakaoMapReadyCallback() {
@@ -152,10 +156,11 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun setBottomSheet() {
-        bottomSheetLayout = findViewById<ConstraintLayout>(R.id.bottom_sheet_layout)
-        bottomSheetName = findViewById<TextView>(R.id.name)
-        bottomSheetAddress = findViewById<TextView>(R.id.address)
-        bottomSheetCategory = findViewById<TextView>(R.id.category)
+        val bottomSheetBinding: BottomSheetBinding = BottomSheetBinding.bind(binding.includedBottomSheet.root)
+        bottomSheetLayout = bottomSheetBinding.bottomSheetLayout
+        bottomSheetName = bottomSheetBinding.name
+        bottomSheetAddress = bottomSheetBinding.address
+        bottomSheetCategory = bottomSheetBinding.category
 
         bottomSheetBehavior = BottomSheetBehavior.from(bottomSheetLayout)
         bottomSheetBehavior.addBottomSheetCallback(object :
