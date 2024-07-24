@@ -9,19 +9,19 @@ import campus.tech.kakao.map.data.model.DBPlace
 import campus.tech.kakao.map.data.model.DBPlace.Companion.DATABASE_NAME
 
 @Database(entities = [DBPlace::class], version = 1)
-abstract class PlacesDatabase: RoomDatabase() {
+abstract class PlacesRoomDB: RoomDatabase() {
     abstract fun placeDao(): PlaceDao
 
 
     companion object {
         @Volatile
-        private var Instance: PlacesDatabase? = null
+        private var Instance: PlacesRoomDB? = null
 
-        fun getDatabase(context: Context): PlacesDatabase {
+        fun getDatabase(context: Context): PlacesRoomDB {
             return Instance ?: synchronized(this) {
                 Room.databaseBuilder(
                     context.applicationContext,
-                    PlacesDatabase::class.java, DATABASE_NAME
+                    PlacesRoomDB::class.java, DATABASE_NAME
                 ).build().also { Instance = it }
             }
         }

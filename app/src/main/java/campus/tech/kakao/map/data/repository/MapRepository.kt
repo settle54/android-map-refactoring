@@ -6,7 +6,7 @@ import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import campus.tech.kakao.map.data.dao.PlaceDao
 import campus.tech.kakao.map.data.database.PlacesDBHelper
-import campus.tech.kakao.map.data.database.PlacesDatabase
+import campus.tech.kakao.map.data.database.PlacesRoomDB
 import campus.tech.kakao.map.data.model.DBPlace
 import campus.tech.kakao.map.data.model.DBPlace.Companion.DATABASE_NAME
 import campus.tech.kakao.map.data.network.api.RetrofitClient
@@ -16,18 +16,19 @@ import campus.tech.kakao.map.data.model.RecentSearchWord
 import com.google.gson.GsonBuilder
 import com.google.gson.reflect.TypeToken
 import com.kakao.vectormap.LatLng
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
 
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import javax.inject.Inject
 
-class MapRepository @Inject constructor(private val context: Context, private val placeDao: PlaceDao) :
+class MapRepository @Inject constructor(
+    private val context: Context,
+    private val placeDao: PlaceDao,
+    private val localSql: PlacesDBHelper,
+    private val localRoom: PlacesRoomDB
+) :
     LocalDBRepoImpl {
-    private val localDB: PlacesDBHelper = PlacesDBHelper(context)
-    private val localRoom: PlacesDatabase = PlacesDatabase.getDatabase(context)
 
     private lateinit var prefs: SharedPreferences
     private lateinit var prefEditor: SharedPreferences.Editor
@@ -78,18 +79,18 @@ class MapRepository @Inject constructor(private val context: Context, private va
      * Local DB 관련 - Room
      */
     suspend fun insertRoomInitialData() {
-            if (!dbFileExists(DATABASE_NAME)) {
-                val places = mutableListOf<DBPlace>()
-                for (i in 1..30) {
-                    val cafe = DBPlace(name = "공원$i", address = "서울 성동구 성수동 $i", category = "카페")
-                    val pharmacy =
-                        DBPlace(name = "병원$i", address = "서울 강남구 대치동 $i", category = "약국")
-                    places.add(cafe)
-                    places.add(pharmacy)
-                }
-                localRoom.placeDao().insertAll(*places.toTypedArray())
+        if (!dbFileExists(DATABASE_NAME)) {
+            val places = mutableListOf<DBPlace>()
+            for (i in 1..30) {
+                val cafe = DBPlace(name = "공원$i", address = "서울 성동구 성수동 $i", category = "카페")
+                val pharmacy =
+                    DBPlace(name = "병원$i", address = "서울 강남구 대치동 $i", category = "약국")
+                places.add(cafe)
+                places.add(pharmacy)
             }
-            Log.d("search2", "insetSearch: ${Thread.currentThread().name}")
+            localRoom.placeDao().insertAll(*places.toTypedArray())
+        }
+        Log.d("search2", "insetSearch: ${Thread.currentThread().name}")
     }
 
     private fun DBPlace.toPlace(): Place {
@@ -103,11 +104,11 @@ class MapRepository @Inject constructor(private val context: Context, private va
     }
 
     suspend fun searchRoomPlaces(search: String, onPlaceResponse: (List<Place>) -> Unit) {
-            val filtered: List<Place> = getAllPlaces()
-                .filter { it.name.contains(search, ignoreCase = true) }
-                .map { dbPlace -> dbPlace.toPlace() }
-            Log.d("Thread", "${Thread.currentThread().name}")
-            onPlaceResponse(filtered)
+        val filtered: List<Place> = getAllPlaces()
+            .filter { it.name.contains(search, ignoreCase = true) }
+            .map { dbPlace -> dbPlace.toPlace() }
+        Log.d("Thread", "${Thread.currentThread().name}")
+        onPlaceResponse(filtered)
     }
 
     override suspend fun getAllPlaces(): List<DBPlace> = placeDao.getAllPlaces()
@@ -121,31 +122,31 @@ class MapRepository @Inject constructor(private val context: Context, private va
      * Local DB 관련 - DBHelper
      */
     fun insertLocalInitialData() {
-            if (!dbFileExists(PlacesDBHelper.TABLE_NAME)) {
-                val places = arrayListOf<Place>()
-                for (i in 1..30) {
-                    val cafe = Place("카페$i", "서울 성동구 성수동 $i", "카페")
-                    val pharmacy = Place("약국$i", "서울 강남구 대치동 $i", "약국")
-                    places.add(cafe)
-                    places.add(pharmacy)
-                }
-                localDB.insertPlaces(places)
+        if (!dbFileExists(PlacesDBHelper.TABLE_NAME)) {
+            val places = arrayListOf<Place>()
+            for (i in 1..30) {
+                val cafe = Place("카페$i", "서울 성동구 성수동 $i", "카페")
+                val pharmacy = Place("약국$i", "서울 강남구 대치동 $i", "약국")
+                places.add(cafe)
+                places.add(pharmacy)
             }
-            Log.d("search2", "insetSearch: ${Thread.currentThread().name}")
+            localSql.insertPlaces(places)
+        }
+        Log.d("search2", "insetSearch: ${Thread.currentThread().name}")
     }
 
     fun getAllLocalPlaces(): List<Place> {
-        return localDB.getAllPlaces()
+        return localSql.getAllPlaces()
     }
 
     fun insertLocalPlace(name: String, address: String, category: String) {
         val place = Place(name, address, category)
-        localDB.insertPlace(place)
+        localSql.insertPlace(place)
     }
 
     fun deleteLocalPlace(name: String, address: String, category: String) {
         val place = Place(name, address, category)
-        localDB.deletePlace(place)
+        localSql.deletePlace(place)
     }
 
     fun searchDBPlaces(search: String, onPlaceResponse: (List<Place>) -> Unit) {

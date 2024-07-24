@@ -42,8 +42,8 @@ class SearchActivity : AppCompatActivity() {
 
         binding.searchInput.addTextChangedListener { text ->
             viewModel.searchPlaces(text.toString())
-//            viewModel.searchDBPlaces(text.toString())     //테스트용(검색)
-//            viewModel.searchRoomPlaces(text.toString())   //테스트용(검색)
+//            viewModel.searchDBPlaces(text.toString())     // DBHelper 테스트 용 (검색)
+//            viewModel.searchRoomPlaces(text.toString())   // Room 테스트 용 (검색)
         }
 
         binding.deleteInput.setOnClickListener {
@@ -96,7 +96,7 @@ class SearchActivity : AppCompatActivity() {
         val intent = Intent(this, MainActivity::class.java).apply {
             putExtra("place", place)
         }
-        Log.d("searchAct State", "Intent is: $intent")
+        Log.d("intent", "Intent is: $intent")
         setResult(Activity.RESULT_OK, intent)
         finish()
     }
