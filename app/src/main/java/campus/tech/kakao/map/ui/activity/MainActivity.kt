@@ -117,7 +117,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun moveCamera(latLng: LatLng) {
-        val cameraUpdate = CameraUpdateFactory.newCenterPosition(latLng)
+        val cameraUpdate = CameraUpdateFactory.newCenterPosition(latLng, 15)
         Log.d("MainAct State", "Intent is: $intent")
         Log.d("kakaomap", "moveCamera: $kakaoMap")
         kakaoMap?.moveCamera(cameraUpdate, CameraAnimation.from(500, true, true))
