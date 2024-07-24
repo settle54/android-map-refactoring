@@ -16,27 +16,25 @@ import campus.tech.kakao.map.data.model.RecentSearchWord
 import com.google.gson.GsonBuilder
 import com.google.gson.reflect.TypeToken
 import com.kakao.vectormap.LatLng
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import javax.inject.Inject
+import javax.inject.Singleton
 
+@Singleton
 class MapRepository @Inject constructor(
     private val context: Context,
+    private val dataStoreManager: DataStoreManager,
     private val placeDao: PlaceDao,
     private val localSql: PlacesDBHelper,
     private val localRoom: PlacesRoomDB
-) :
-    LocalDBRepoImpl {
+) : LocalDBRepoImpl {
 
-    private lateinit var prefs: SharedPreferences
-    private lateinit var prefEditor: SharedPreferences.Editor
     var searchHistoryList = ArrayList<RecentSearchWord>()
-
-    init {
-        setPrefs()
-    }
 
 
     /**
@@ -158,7 +156,7 @@ class MapRepository @Inject constructor(
 
 
     /**
-     * SharedPreferences 관련
+     * datastore 관련
      */
     fun getSearchHistory(): ArrayList<RecentSearchWord> {
         return searchHistoryList
@@ -168,68 +166,41 @@ class MapRepository @Inject constructor(
         return searchHistoryList.indexOfFirst { it.word == itemName }
     }
 
-    fun moveSearchToLast(idx: Int, search: String) {
+    suspend fun moveSearchToLast(idx: Int, search: String) {
         if (idx == searchHistoryList.size - 1) return
         searchHistoryList.removeAt(idx)
         searchHistoryList.add(RecentSearchWord(search))
         saveSearchHistory()
     }
 
-    fun addSearchHistory(search: String) {
-        searchHistoryList.add(RecentSearchWord(search))
-        saveSearchHistory()
-    }
-
-    fun delSearchHistory(idx: Int) {
-        searchHistoryList.removeAt(idx)
-        saveSearchHistory()
-    }
-
-    private fun saveSearchHistory() {
-        Log.d("prefs", "saveHistory: ${Thread.currentThread().name}")
-        val stringPrefs = GsonBuilder().create().toJson(
-            searchHistoryList, object : TypeToken<ArrayList<RecentSearchWord>>() {}.type
-        )
-        prefEditor.putString(SEARCH_HISTORY, stringPrefs)
-        prefEditor.apply()
-    }
-
-    private fun setPrefs() {
-        prefs = context.getSharedPreferences(PREF_NAME, AppCompatActivity.MODE_PRIVATE)
-        prefEditor = prefs.edit()
-        val stringPrefs = prefs.getString(SEARCH_HISTORY, null)
-
-        if (stringPrefs != null && stringPrefs != "[]") {
-            searchHistoryList = GsonBuilder().create().fromJson(
-                stringPrefs, object : TypeToken<ArrayList<RecentSearchWord>>() {}.type
-            )
+    suspend fun addSearchHistory(search: String) {
+        withContext(Dispatchers.IO) {
+            searchHistoryList.add(RecentSearchWord(search))
+            saveSearchHistory()
         }
     }
 
-    fun getLastPos(): LatLng? {
-        val stringPrefs = prefs.getString(LAST_POSITION, null)
-        if (stringPrefs != null) {
-            val lastPos: LatLng = GsonBuilder().create().fromJson(
-                stringPrefs, object : TypeToken<LatLng>() {}.type
-            )
-            return lastPos
+    suspend fun delSearchHistory(idx: Int) {
+        withContext(Dispatchers.IO) {
+            searchHistoryList.removeAt(idx)
+            saveSearchHistory()
         }
-        return null
     }
 
-    fun savePos(latLng: LatLng) {
-        Log.d("prefs", "savePos: ${Thread.currentThread().name}")
-        val stringPrefs = GsonBuilder().create().toJson(
-            latLng, object : TypeToken<LatLng>() {}.type
-        )
-        prefEditor.putString(LAST_POSITION, stringPrefs)
-        prefEditor.apply()
+    private suspend fun saveSearchHistory() {
+        dataStoreManager.saveSearchHistory(searchHistoryList)
     }
 
-    companion object {
-        private const val PREF_NAME = "app_data"
-        private const val SEARCH_HISTORY = "search_history"
-        private const val LAST_POSITION = "last_position"
+    suspend fun setPrefs() {
+        searchHistoryList = dataStoreManager.getSearchHistory()
+    }
+
+    suspend fun getLastPos(): LatLng? {
+        return dataStoreManager.getLastPos()
+    }
+
+    suspend fun savePos(latLng: LatLng) {
+        return dataStoreManager.savePos(latLng)
     }
 
 }

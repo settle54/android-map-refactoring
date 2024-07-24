@@ -17,6 +17,7 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
 import androidx.core.content.IntentCompat
 import androidx.core.view.isInvisible
+import androidx.lifecycle.lifecycleScope
 import campus.tech.kakao.map.application.MyApplication
 import campus.tech.kakao.map.R
 import campus.tech.kakao.map.databinding.ActivityMainBinding
@@ -37,6 +38,7 @@ import com.kakao.vectormap.label.LabelOptions
 import com.kakao.vectormap.label.LabelStyle
 import com.kakao.vectormap.label.LabelStyles
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
 import java.lang.Exception
 import java.lang.IllegalArgumentException
 
@@ -65,8 +67,10 @@ class MainActivity : AppCompatActivity() {
 //        KakaoMapSdk.init(this, "I'm nativeKey")     // 오류확인
 
         Log.d("onCreate", "")
-        val lastPos = viewModel.getLastPos()
-        drawMap(lastPos)
+        lifecycleScope.launch {
+            val lastPos = viewModel.getLastPos()
+            drawMap(lastPos)
+        }
         setBottomSheet()
 
         binding.searchInput.setOnClickListener {

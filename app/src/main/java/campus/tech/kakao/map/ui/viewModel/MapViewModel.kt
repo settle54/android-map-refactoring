@@ -73,6 +73,7 @@ class MapViewModel @Inject constructor(@ApplicationContext context: Context, pri
         viewModelScope.launch(Dispatchers.IO) {
             repository.insertRoomInitialData()
             repository.insertLocalInitialData()
+            repository.setPrefs()
         }
     }
 
@@ -80,7 +81,7 @@ class MapViewModel @Inject constructor(@ApplicationContext context: Context, pri
     /**
      * Pref 관련
      */
-    fun getLastPos(): LatLng? {
+    suspend fun getLastPos(): LatLng? {
         return repository.getLastPos()
     }
 
