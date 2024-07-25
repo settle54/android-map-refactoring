@@ -9,8 +9,6 @@ import dagger.hilt.android.HiltAndroidApp
 @HiltAndroidApp
 class MyApplication: Application() {
 
-    lateinit var viewModelFactory: MapViewModelFactory
-
     override fun onCreate() {
         super.onCreate()
         val nativeKey = getString(R.string.kakao_api_key)

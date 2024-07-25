@@ -17,6 +17,7 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
 import androidx.core.content.IntentCompat
 import androidx.core.view.isInvisible
+import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.lifecycleScope
 import campus.tech.kakao.map.application.MyApplication
 import campus.tech.kakao.map.R
@@ -25,6 +26,7 @@ import campus.tech.kakao.map.data.model.Place
 import campus.tech.kakao.map.databinding.BottomSheetBinding
 import campus.tech.kakao.map.databinding.MapErrorBinding
 import campus.tech.kakao.map.ui.viewModel.MapViewModel
+import campus.tech.kakao.map.utill.BitmapUtils
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.kakao.vectormap.KakaoMap
 import com.kakao.vectormap.KakaoMapReadyCallback
@@ -47,15 +49,11 @@ import java.lang.IllegalArgumentException
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
     private lateinit var kakaoMap: KakaoMap
-    private lateinit var marker: Bitmap
     private var label: Label? = null
     private lateinit var styles: LabelStyles
 
+    private lateinit var bottomSheetBinding: BottomSheetBinding
     private lateinit var bottomSheetBehavior: BottomSheetBehavior<ConstraintLayout>
-    private lateinit var bottomSheetLayout: ConstraintLayout
-    private lateinit var bottomSheetName: TextView
-    private lateinit var bottomSheetAddress: TextView
-    private lateinit var bottomSheetCategory: TextView
 
     private val viewModel: MapViewModel by viewModels ()
 
@@ -102,7 +100,6 @@ class MainActivity : AppCompatActivity() {
                 Log.d("KakaoMap", "카카오맵 실행")
                 kakaoMap = p0
                 makeLabelStyle()
-//          addLabel(Place("dd", "xxx", "", "127.115587", "37.406960"))
             }
 
             override fun getPosition(): LatLng {
@@ -128,7 +125,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun makeLabelStyle() {
-        vectorToBitmap(R.drawable.pin_drop_24px)
+        val marker = BitmapUtils.vectorToBitmap(this, R.drawable.pin_drop_24px)
 
         styles = LabelStyles.from(
             "myLabel",
@@ -139,40 +136,21 @@ class MainActivity : AppCompatActivity() {
         styles = kakaoMap.labelManager?.addLabelStyles(styles)!!
     }
 
-    private fun vectorToBitmap(drawableId: Int) {
-        val drawable = ContextCompat.getDrawable(this, drawableId)
-        val bitmap = Bitmap.createBitmap(
-            drawable!!.intrinsicWidth,
-            drawable!!.intrinsicHeight,
-            Bitmap.Config.ARGB_8888
-        )
-        val canvas = Canvas(bitmap)
-        drawable.setBounds(0, 0, canvas.width, canvas.height)
-        drawable.draw(canvas)
-        marker = bitmap
-    }
-
     private fun showBottomSheet(place: Place) {
-        bottomSheetName.text = place.name
-        bottomSheetAddress.text = place.address
-        bottomSheetCategory.text = place.category
+        bottomSheetBinding.data = place
         bottomSheetBehavior.state = BottomSheetBehavior.STATE_HALF_EXPANDED
     }
 
     private fun setBottomSheet() {
-        val bottomSheetBinding: BottomSheetBinding = BottomSheetBinding.bind(binding.includedBottomSheet.root)
-        bottomSheetLayout = bottomSheetBinding.bottomSheetLayout
-        bottomSheetName = bottomSheetBinding.name
-        bottomSheetAddress = bottomSheetBinding.address
-        bottomSheetCategory = bottomSheetBinding.category
+        bottomSheetBinding = DataBindingUtil.bind(binding.includedBottomSheet.root)!!
 
-        bottomSheetBehavior = BottomSheetBehavior.from(bottomSheetLayout)
+        bottomSheetBehavior = BottomSheetBehavior.from(bottomSheetBinding.bottomSheetLayout)
         bottomSheetBehavior.addBottomSheetCallback(object :
             BottomSheetBehavior.BottomSheetCallback() {
             override fun onStateChanged(bottomSheet: View, newState: Int) {
                 binding.searchWindow.isInvisible = (newState < BottomSheetBehavior.STATE_COLLAPSED)
-                bottomSheetName.isInvisible = (newState == BottomSheetBehavior.STATE_COLLAPSED)
-                bottomSheetCategory.isInvisible = (newState == BottomSheetBehavior.STATE_COLLAPSED)
+                bottomSheetBinding.name.isInvisible = (newState == BottomSheetBehavior.STATE_COLLAPSED)
+                bottomSheetBinding.category.isInvisible = (newState == BottomSheetBehavior.STATE_COLLAPSED)
                 if (bottomSheetBehavior.state == BottomSheetBehavior.STATE_HIDDEN)
                     bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
             }
