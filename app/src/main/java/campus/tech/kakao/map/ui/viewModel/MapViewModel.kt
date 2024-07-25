@@ -20,11 +20,11 @@ import javax.inject.Inject
 class MapViewModel @Inject constructor(@ApplicationContext context: Context, private val repository: MapRepository) : ViewModel() {
 
     private val _places: MutableLiveData<List<Place>> = MutableLiveData<List<Place>>()
-    val places: LiveData<List<Place>> = _places
+    val places: LiveData<List<Place>> get()= _places
 
     private val _searchHistoryData: MutableLiveData<ArrayList<RecentSearchWord>> =
         MutableLiveData<ArrayList<RecentSearchWord>>()
-    val searchHistoryData: LiveData<ArrayList<RecentSearchWord>> = _searchHistoryData
+    val searchHistoryData: LiveData<ArrayList<RecentSearchWord>> get() = _searchHistoryData
 
     init {
         _searchHistoryData.value = repository.searchHistoryList
