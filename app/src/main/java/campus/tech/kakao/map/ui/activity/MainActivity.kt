@@ -19,6 +19,7 @@ import androidx.core.content.IntentCompat
 import androidx.core.view.isInvisible
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.lifecycleScope
+import campus.tech.kakao.map.BuildConfig
 import campus.tech.kakao.map.application.MyApplication
 import campus.tech.kakao.map.R
 import campus.tech.kakao.map.databinding.ActivityMainBinding
@@ -28,6 +29,7 @@ import campus.tech.kakao.map.databinding.MapErrorBinding
 import campus.tech.kakao.map.ui.viewModel.MapViewModel
 import campus.tech.kakao.map.utill.BitmapUtils
 import com.google.android.material.bottomsheet.BottomSheetBehavior
+import com.kakao.sdk.common.util.Utility
 import com.kakao.vectormap.KakaoMap
 import com.kakao.vectormap.KakaoMapReadyCallback
 import com.kakao.vectormap.KakaoMapSdk
@@ -70,6 +72,7 @@ class MainActivity : AppCompatActivity() {
             drawMap(lastPos)
         }
         setBottomSheet()
+//        Log.d("api", Utility.getKeyHash(this))
 
         binding.searchInput.setOnClickListener {
             val intent = Intent(this, SearchActivity::class.java)
