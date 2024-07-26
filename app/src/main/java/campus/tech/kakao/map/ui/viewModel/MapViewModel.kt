@@ -29,10 +29,6 @@ class MapViewModel @Inject constructor(@ApplicationContext context: Context, pri
         MutableLiveData<ArrayList<RecentSearchWord>>()
     val searchHistoryData: LiveData<ArrayList<RecentSearchWord>> get() = _searchHistoryData
 
-    lateinit var kakaoMap: KakaoMap
-    lateinit var styles: LabelStyles
-    var location: Place? = null
-
     init {
         _searchHistoryData.value = repository.searchHistoryList
         setLocalDB()
