@@ -103,6 +103,7 @@ class MainActivity : AppCompatActivity() {
                 Log.d("KakaoMap", "카카오맵 실행")
                 kakaoMap = p0
                 makeLabelStyle()
+                viewModel.kakaoMap = p0
             }
 
             override fun getPosition(): LatLng {
@@ -137,6 +138,7 @@ class MainActivity : AppCompatActivity() {
                 .setZoomLevel(kakaoMap.minZoomLevel)
         )
         styles = kakaoMap.labelManager?.addLabelStyles(styles)!!
+        viewModel.styles = styles
     }
 
     private fun showBottomSheet(place: Place) {
@@ -185,6 +187,7 @@ class MainActivity : AppCompatActivity() {
                         requireNotNull(kakaoMap.labelManager?.layer).remove(label)
                         addLabel(it)
                         showBottomSheet(it)
+                        viewModel.location = it
                     }
                 } catch (e: IllegalArgumentException) {
                     e.printStackTrace()
@@ -201,5 +204,9 @@ class MainActivity : AppCompatActivity() {
     override fun onPause() {
         super.onPause()
         binding.mapView.pause()
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
     }
 }

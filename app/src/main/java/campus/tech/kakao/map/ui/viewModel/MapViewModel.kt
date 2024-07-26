@@ -9,7 +9,10 @@ import androidx.lifecycle.viewModelScope
 import campus.tech.kakao.map.data.repository.MapRepository
 import campus.tech.kakao.map.data.model.Place
 import campus.tech.kakao.map.data.model.RecentSearchWord
+import com.kakao.vectormap.KakaoMap
 import com.kakao.vectormap.LatLng
+import com.kakao.vectormap.label.Label
+import com.kakao.vectormap.label.LabelStyles
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.Dispatchers
@@ -25,6 +28,10 @@ class MapViewModel @Inject constructor(@ApplicationContext context: Context, pri
     private val _searchHistoryData: MutableLiveData<ArrayList<RecentSearchWord>> =
         MutableLiveData<ArrayList<RecentSearchWord>>()
     val searchHistoryData: LiveData<ArrayList<RecentSearchWord>> get() = _searchHistoryData
+
+    lateinit var kakaoMap: KakaoMap
+    lateinit var styles: LabelStyles
+    var location: Place? = null
 
     init {
         _searchHistoryData.value = repository.searchHistoryList
